@@ -16,9 +16,9 @@
             android:id="@+id/eq_magnitude_text"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:textSize="20dp"
-            android:textStyle="bold"
             android:maxLength="4"
+            android:textSize="20sp"
+            android:textStyle="bold"
             tools:text="4.3" />
 
         <ImageView
@@ -36,7 +36,7 @@
             android:layout_marginEnd="16dp"
             android:layout_toStartOf="@id/eq_arrow_image"
             android:layout_toEndOf="@id/eq_magnitude_text"
-            android:textSize="20dp"
+            android:textSize="20sp"
             tools:text="80 km E Argentina" />
 
     </RelativeLayout>

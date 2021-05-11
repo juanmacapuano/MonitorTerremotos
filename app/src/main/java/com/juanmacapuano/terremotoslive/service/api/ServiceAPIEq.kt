@@ -1,4 +1,4 @@
-package com.juanmacapuano.terremotoslive.service.repository
+package com.juanmacapuano.terremotoslive.service.api
 
 import com.juanmacapuano.terremotoslive.service.data.EqResponse
 import okhttp3.OkHttpClient
@@ -11,7 +11,7 @@ import retrofit2.http.GET
 interface ServiceAPIEq {
 
     @GET("all_hour.geojson")
-    fun getListEq() : Call<EqResponse>
+    suspend fun getListEq() : EqResponse
 
     companion object {
         const val BASE_URL = "https://earthquake.usgs.gov/earthquakes/feed/v1.0/summary/"

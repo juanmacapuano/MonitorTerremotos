@@ -1,68 +1,37 @@
 package com.juanmacapuano.terremotoslive.viewmodel
 
+import android.app.Application
 import android.util.Log
 import androidx.lifecycle.*
-import com.juanmacapuano.terremotoslive.service.data.EarthQuake
-import com.juanmacapuano.terremotoslive.service.data.EqResponse
-import com.juanmacapuano.terremotoslive.service.data.Features
+import com.juanmacapuano.terremotoslive.service.api.StatusResponseAPI
+import com.juanmacapuano.terremotoslive.service.database.getDatabase
 import com.juanmacapuano.terremotoslive.service.repository.RepositoryListEq
-import com.juanmacapuano.terremotoslive.service.repository.ServiceAPIEq
-import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
-import kotlinx.coroutines.withContext
-import retrofit2.Call
-import retrofit2.Callback
-import retrofit2.Response
+import java.net.UnknownHostException
 
-class EarthQuakeViewModel() : ViewModel() {
+private val TAG = EarthQuakeViewModel::class.java.simpleName
 
-    private val repositoryListEq: RepositoryListEq = RepositoryListEq()
+class EarthQuakeViewModel(application: Application) : AndroidViewModel(application) {
 
-    private var _listEqResponseLiveData = MutableLiveData<MutableList<EarthQuake>>()
-    val listEqResponseLiveData : LiveData<MutableList<EarthQuake>>
-        get() = _listEqResponseLiveData
+    private val database = getDatabase(application)
+    private val repositoryListEq: RepositoryListEq = RepositoryListEq(database)
 
+    private val _statusLoading = MutableLiveData<StatusResponseAPI>()
+    val statusLoading: LiveData<StatusResponseAPI>
+        get() = _statusLoading
+
+    val earthQuakeList = repositoryListEq.earthQuakeList
 
     init {
         viewModelScope.launch {
-            getAllEq()
+            try {
+                _statusLoading.value = StatusResponseAPI.LOADING
+                repositoryListEq.getAllEarthQuake()
+                _statusLoading.value = StatusResponseAPI.DONE
+            } catch (e: UnknownHostException) {
+                _statusLoading.value = StatusResponseAPI.ERROR
+                Log.d(TAG, "No internet connection", e)
+            }
         }
-    }
-
-    private fun getAllEq()  {
-        val eqResponse = repositoryListEq.getAllEq()
-        eqResponse
-            .enqueue(object : Callback<EqResponse> {
-                override fun onResponse(call: Call<EqResponse>, response: Response<EqResponse>) {
-                    if (response.isSuccessful) {
-                        val data = response.body()
-                        if (data != null) {
-                            _listEqResponseLiveData.value = parseEqResponse(data.features)
-                        }
-                    }
-                }
-
-                override fun onFailure(call: Call<EqResponse>, t: Throwable) {
-                }
-            })
-    }
-
-    private fun parseEqResponse(features : List<Features>): MutableList<EarthQuake> {
-        val eqListResponse = mutableListOf<EarthQuake>()
-        for (itemFeature in features) {
-            val propertiesItem = itemFeature.properties
-            val geometryItem = itemFeature.geometry
-            val idItem = itemFeature.id
-
-            val longitudeItem = geometryItem.longitud
-            val latitudeItem = geometryItem.latitude
-
-            val placeItem = propertiesItem.place
-            val magnitudeItem = propertiesItem.mag
-            val timeItem = propertiesItem.time
-
-            eqListResponse.add(EarthQuake(idItem, placeItem, magnitudeItem, timeItem, longitudeItem, latitudeItem))
-        }
-        return eqListResponse
     }
 }

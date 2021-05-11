@@ -5,42 +5,158 @@
 
     <data>
 
+        <variable
+            name="earthQuake"
+            type="com.juanmacapuano.terremotoslive.service.data.EarthQuake" />
+
     </data>
 
-        <com.google.android.material.card.MaterialCardView
-            android:id="@+id/cv_detail_eq"
-            android:layout_width="match_parent"
+
+    <androidx.constraintlayout.widget.ConstraintLayout
+        android:layout_width="match_parent"
+        android:layout_height="match_parent">
+
+        <TextView
+            android:id="@+id/tv_number"
+            android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            app:layout_constraintBottom_toBottomOf="parent"
+            android:layout_marginStart="24dp"
+            android:layout_marginTop="32dp"
+            android:text="@{String.valueOf(earthQuake.magnitude)}"
+            android:textColor="#E80A0A"
+            android:textSize="70sp"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toTopOf="parent"
+            tools:text="4.50" />
+
+        <TextView
+            android:id="@+id/tv_scala"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginStart="16dp"
+            android:text="@string/ritcher"
+            android:textSize="20sp"
+            app:layout_constraintBaseline_toBaselineOf="@+id/tv_number"
+            app:layout_constraintStart_toEndOf="@+id/tv_number"
+            tools:text="Ritcher" />
+
+        <ImageView
+            android:id="@+id/iv_coord"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginStart="24dp"
+            android:layout_marginTop="32dp"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@+id/tv_number"
+            app:srcCompat="@android:drawable/ic_menu_mapmode" />
+
+        <TextView
+            android:id="@+id/tv_longitude_title"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginStart="16dp"
+            android:text="@string/longitude"
+            app:layout_constraintBottom_toTopOf="@+id/tv_latitude_title"
+            app:layout_constraintStart_toEndOf="@+id/iv_coord"
+            app:layout_constraintTop_toTopOf="@+id/iv_coord"
+            app:layout_constraintVertical_chainStyle="spread"
+            tools:text="Longitude:" />
+
+        <TextView
+            android:id="@+id/tv_latitude_title"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginStart="16dp"
+            android:text="@string/latitude"
+            app:layout_constraintBottom_toBottomOf="@+id/iv_coord"
+            app:layout_constraintStart_toEndOf="@+id/iv_coord"
+            app:layout_constraintTop_toBottomOf="@+id/tv_longitude_title"
+            tools:text="Latitude:" />
+
+        <TextView
+            android:id="@+id/tv_longitude"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginStart="16dp"
+            android:text="@{String.valueOf(earthQuake.longitude)}"
+            app:layout_constraintBaseline_toBaselineOf="@+id/tv_longitude_title"
+            app:layout_constraintStart_toEndOf="@+id/tv_longitude_title"
+            tools:text="39.4598" />
+
+        <TextView
+            android:id="@+id/tv_latitude"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="@{String.valueOf(earthQuake.latitude)}"
+            app:layout_constraintBaseline_toBaselineOf="@+id/tv_latitude_title"
+            app:layout_constraintStart_toStartOf="@+id/tv_longitude"
+            tools:text="22.1234" />
+
+        <ImageView
+            android:id="@+id/iv_separator_location"
+            android:layout_width="fill_parent"
+            android:layout_height="2dp"
+            android:layout_marginTop="24dp"
+            android:scaleType="fitXY"
+            android:src="@android:drawable/divider_horizontal_dim_dark"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toTopOf="parent">
+            app:layout_constraintTop_toBottomOf="@+id/tv_latitude_title" />
+
+        <ImageView
+            android:id="@+id/iv_location"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginStart="24dp"
+            android:layout_marginTop="24dp"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@+id/iv_separator_location"
+            app:srcCompat="@android:drawable/ic_menu_mylocation" />
+
+        <TextView
+            android:id="@+id/tv_location"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginStart="16dp"
+            android:text="@{earthQuake.place}"
+            app:layout_constraintBottom_toBottomOf="@+id/iv_location"
+            app:layout_constraintStart_toEndOf="@+id/iv_location"
+            app:layout_constraintTop_toTopOf="@+id/iv_location"
+            tools:text="16 km S of Buenos Aires, Argentina" />
+
+        <ImageView
+            android:id="@+id/iv_separator_time"
+            android:layout_width="fill_parent"
+            android:layout_height="2dp"
+            android:layout_marginTop="24dp"
+            android:scaleType="fitXY"
+            android:src="@android:drawable/divider_horizontal_dim_dark"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintHorizontal_bias="0.0"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@+id/iv_location" />
+
+        <ImageView
+            android:id="@+id/iv_time"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginStart="24dp"
+            android:layout_marginTop="24dp"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@+id/iv_separator_time"
+            app:srcCompat="@android:drawable/ic_menu_recent_history" />
+
+        <TextView
+            android:id="@+id/tv_time"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginStart="16dp"
+            app:layout_constraintBottom_toBottomOf="@+id/iv_time"
+            app:layout_constraintStart_toEndOf="@+id/iv_time"
+            app:layout_constraintTop_toTopOf="@+id/iv_time"
+            tools:text="07/may./2021 13:14:15" />
 
 
+    </androidx.constraintlayout.widget.ConstraintLayout>
 
-        <androidx.constraintlayout.widget.ConstraintLayout
-            android:layout_width="match_parent"
-            android:layout_height="match_parent"
-            tools:layout_editor_absoluteX="-11dp"
-            tools:layout_editor_absoluteY="207dp">
-
-            <TextView
-                android:id="@+id/textView"
-                android:layout_width="0dp"
-                android:layout_height="wrap_content"
-                app:layout_constraintStart_toStartOf="parent"
-                app:layout_constraintTop_toTopOf="parent"
-                tools:text="Name Text" />
-
-            <TextView
-                android:layout_width="0dp"
-                android:layout_height="wrap_content"
-                android:layout_marginStart="16dp"
-                app:layout_constraintEnd_toEndOf="parent"
-                app:layout_constraintStart_toEndOf="@+id/textView"
-                app:layout_constraintTop_toTopOf="parent" />
-
-
-        </androidx.constraintlayout.widget.ConstraintLayout>
-        </com.google.android.material.card.MaterialCardView>
 </layout>

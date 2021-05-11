@@ -6,5 +6,13 @@
     <fragment
         android:id="@+id/listEqFragment"
         android:name="com.juanmacapuano.terremotoslive.view.ui.ListEqFragment"
-        android:label="ListEqFragment" />
+        android:label="ListEqFragment" >
+        <action
+            android:id="@+id/action_listEqFragment_to_detailEqFragment"
+            app:destination="@id/detailEqFragment" />
+    </fragment>
+    <fragment
+        android:id="@+id/detailEqFragment"
+        android:name="com.juanmacapuano.terremotoslive.view.ui.DetailEqFragment"
+        android:label="DetailEqFragment" />
 </navigation>

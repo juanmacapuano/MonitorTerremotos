@@ -2,8 +2,6 @@ package com.juanmacapuano.terremotoslive.view.ui
 
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
-import android.view.LayoutInflater
-import com.juanmacapuano.terremotoslive.R
 import com.juanmacapuano.terremotoslive.databinding.ActivityMainBinding
 
 class MainActivity : AppCompatActivity() {

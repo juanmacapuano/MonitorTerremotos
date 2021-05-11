@@ -1,52 +1,56 @@
 package com.juanmacapuano.terremotoslive.service.repository
 
-import android.util.Log
 import androidx.lifecycle.LiveData
-import androidx.lifecycle.MutableLiveData
+import com.juanmacapuano.terremotoslive.service.api.apiEq
+import com.juanmacapuano.terremotoslive.service.data.EarthQuake
 import com.juanmacapuano.terremotoslive.service.data.EqResponse
 import com.juanmacapuano.terremotoslive.service.data.Features
-import retrofit2.Call
-import retrofit2.Callback
-import retrofit2.Response
+import com.juanmacapuano.terremotoslive.service.database.EqDatabase
+import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.withContext
 
-class RepositoryListEq {
+private val TAG = RepositoryListEq::class.java.simpleName
 
-    fun getListEq(): MutableLiveData<EqResponse> {
-        val erResponse : MutableLiveData<EqResponse> = MutableLiveData<EqResponse>()
-        apiEq.getListEq()
-            .enqueue(object : Callback<EqResponse> {
-                override fun onResponse(call: Call<EqResponse>, response: Response<EqResponse>) {
-                    if (response.isSuccessful) {
-                        erResponse.postValue(response.body())
-                    }
-                }
+class RepositoryListEq(private val database: EqDatabase) {
 
-                override fun onFailure(call: Call<EqResponse>, t: Throwable) {
-                    Log.d("retroffit", t.message.toString())
-                }
-            })
-        return erResponse
+    val earthQuakeList: LiveData<MutableList<EarthQuake>> = database.eqDao.getAllEarthQuake()
+
+    suspend fun getAllEarthQuake() {
+        return withContext(Dispatchers.IO) {
+            val eqResponse = apiEq.getListEq()
+            val listResponse: MutableList<EarthQuake> = parseEqResponse(eqResponse)
+            //insert to Room
+            database.eqDao.insertAll(listResponse)
+        }
     }
 
-    fun getListEq2(): MutableList<EqResponse> {
-        val erResponse : MutableList<EqResponse> = mutableListOf()
-        apiEq.getListEq()
-            .enqueue(object : Callback<EqResponse> {
-                override fun onResponse(call: Call<EqResponse>, response: Response<EqResponse>) {
-                    if (response.isSuccessful) {
-                        val data = response.body()
-                        if (data != null) {
-                            erResponse.add(data)
-                        }
-                    }
-                }
+    private fun parseEqResponse(eqResponse: EqResponse): MutableList<EarthQuake> {
+        val eqListResponse = mutableListOf<EarthQuake>()
+        var features: List<Features> = mutableListOf()
+        features = eqResponse.features
+        for (itemFeature in features) {
+            val propertiesItem = itemFeature.properties
+            val geometryItem = itemFeature.geometry
+            val idItem = itemFeature.id
 
-                override fun onFailure(call: Call<EqResponse>, t: Throwable) {
-                    Log.d("retroffit", t.message.toString())
-                }
-            })
-        return erResponse
+            val longitudeItem = geometryItem.longitud
+            val latitudeItem = geometryItem.latitude
+
+            val placeItem = propertiesItem.place
+            val magnitudeItem = propertiesItem.mag
+            val timeItem = propertiesItem.time
+
+            eqListResponse.add(
+                EarthQuake(
+                    idItem,
+                    placeItem,
+                    magnitudeItem,
+                    timeItem,
+                    longitudeItem,
+                    latitudeItem
+                )
+            )
+        }
+        return eqListResponse
     }
-
-    fun getAllEq() = apiEq.getListEq()
 }

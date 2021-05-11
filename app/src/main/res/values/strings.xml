@@ -2,4 +2,9 @@
     <string name="app_name">TerremotosLive</string>
     <!-- TODO: Remove or change this placeholder text -->
     <string name="hello_blank_fragment">Hello blank fragment</string>
+    <string name="earthquake_list_empty">EarthQuake list empty</string>
+    <string name="magnitude_format">%.2f</string>
+    <string name="longitude">Longitude</string>
+    <string name="latitude">Latitude:</string>
+    <string name="ritcher">Ritcher</string>
 </resources>
